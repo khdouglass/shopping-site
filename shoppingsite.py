@@ -59,8 +59,30 @@ def show_melon(melon_id):
 @app.route("/cart")
 def show_shopping_cart():
     """Display content of shopping cart."""
-    session["cart"] = {}
+    cart = session["cart"].items()
+    print cart
 
+    melon_total = []
+
+    # melons = session["cart"].get_by_id(melon_id)
+    order_total = 0
+
+    for melon in cart:
+        melon_id = melon[0] 
+        quantity = int(melon[1])
+        melon_obj = melons.get_by_id(melon_id)    
+        sub_total = melon_obj.price * quantity
+        order_total += sub_total
+
+        # import pdb; pdb.set_trace()
+        melon_obj.quantity = 2
+        melon_obj.total = sub_total
+        melon_total.append(melon_obj)
+    print melon_total
+
+    # total_cost = 
+
+    print melons
     # TODO: Display the contents of the shopping cart.
 
     # The logic here will be something like:
@@ -90,6 +112,8 @@ def add_to_cart(melon_id):
     page and display a confirmation message: 'Melon successfully added to
     cart'."""
 
+    print session
+
     # TODO: Finish shopping cart functionality
 
     # The logic here should be something like:
@@ -97,8 +121,10 @@ def add_to_cart(melon_id):
     # - check if a "cart" exists in the session, and create one (an empty
     #   dictionary keyed to the string "cart") if not
     if "cart" not in session:
+        print "*******************"
         session["cart"] = {}
 
+    # import pdb; pdb.set_trace()
     if melon_id in session["cart"]:
         session["cart"][melon_id] += 1
     else:
@@ -107,8 +133,12 @@ def add_to_cart(melon_id):
     # - increment the count for that melon id by 1
     # - flash a success message
     # - redirect the user to the cart page
-    print session
-    return "Oops! This needs to be implemented!"
+    print session['cart']
+    flash ("Successfully added to cart!")
+    return redirect("/cart")
+
+  
+    #return "Oops! This needs to be implemented!"
 
 
 @app.route("/login", methods=["GET"])
